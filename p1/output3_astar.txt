@@ -36,6 +36,6 @@
 %G% % %       %   %       %   % %  S%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Total solution cost: 210
-Number of nodes expanded: 557
+Number of nodes expanded: 558
 Maximum depth searched: 210
 Maximum size of the frontier: 10

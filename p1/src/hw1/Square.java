@@ -1,3 +1,5 @@
+package hw1;
+
 /**
  * Represents a simple square.
  * 

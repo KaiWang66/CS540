@@ -1,3 +1,5 @@
+package hw1;
+
 /**
  * Main Application.
  * 
@@ -10,14 +12,14 @@ public class FindPath {
 	 *            [0]: file name, [1]: astar (a-star), bfs (breadth first search)
 	 */
 	public static void main(String[] args) {
-		Maze maze = IO.readInputFile(args[0]);
+		Maze maze = IO.readInputFile("input3.txt");
 
 		Searcher searcher;
 
-		if (args[1].equals("astar"))
+//		if (args[1].equals("astar"))
 			searcher = new AStarSearcher(maze);
-		else
-			searcher = new BreadthFirstSearcher(maze);
+//		else
+//			searcher = new BreadthFirstSearcher(maze);
 
 		if (searcher.search()) {
 			IO.printOutput(searcher.getModifiedMaze(), searcher.getCost(),

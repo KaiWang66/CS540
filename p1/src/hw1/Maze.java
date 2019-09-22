@@ -1,3 +1,5 @@
+package hw1;
+
 /**
  * A data structure to represent a maze. Each cell in the maze is
  * called a square. The maze is represented as a char matrix.
@@ -89,4 +91,9 @@ public class Maze {
 	public int getNoOfCols() {
 		return noOfCols;
 	}
+
+	public double getDistanceToGoal(Square s) {
+		return Math.sqrt(Math.pow(s.X - goalSquare.X, 2) + Math.pow(s.Y - goalSquare.Y, 2));
+	}
+
 }

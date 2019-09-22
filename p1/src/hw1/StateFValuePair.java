@@ -1,3 +1,5 @@
+package hw1;
+
 /**
  * A data-structure to keep (state,fValue) pairs. This class will helpful to add
  * states to priority queues. You can add a state with the f() value to a queue

@@ -1,4 +1,8 @@
+package hw1;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.stream.IntStream;
 
 /**
  * A state in the search represented by the (x,y) coordinates of the square and
@@ -37,18 +41,26 @@ public class State {
 	}
 
 	/**
-	 * @param visited
+	 * @param explored
 	 *            explored[i][j] is true if (i,j) is already explored
 	 * @param maze
 	 *            initial maze to get find the neighbors
 	 * @return all the successors of the current state
 	 */
 	public ArrayList<State> getSuccessors(boolean[][] explored, Maze maze) {
-		// FILL THIS METHOD
-
-		// TODO check all four neighbors in left, down, right, up order
-		// TODO remember that each successor's depth and gValue are
-		// +1 of this object.
+		ArrayList<State> res = new ArrayList<>();
+		int x = square.X;
+		int y = square.Y;
+		int[][] neighbors = {{x, y - 1}, {x + 1, y}, {x, y + 1}, {x - 1, y}};
+		IntStream.range(0, neighbors.length).forEach(i -> {
+			int r = neighbors[i][0];
+			int c = neighbors[i][1];
+			if (maze.getSquareValue(r, c) != '%' && !explored[neighbors[i][0]][neighbors[i][1]]) {
+				res.add(new State(
+						new Square(neighbors[i][0], neighbors[i][1]), this, gValue + 1, depth + 1));
+			}
+		});
+		return res;
 	}
 
 	/**
@@ -70,11 +82,8 @@ public class State {
 	 * @return true is the current state is a goal state
 	 */
 	public boolean isGoal(Maze maze) {
-		if (square.X == maze.getGoalSquare().X
-				&& square.Y == maze.getGoalSquare().Y)
-			return true;
-
-		return false;
+		return square.X == maze.getGoalSquare().X
+				&& square.Y == maze.getGoalSquare().Y;
 	}
 
 	/**

@@ -1,3 +1,5 @@
+package hw1;
+
 /**
  * Abstract searcher class. 
  * 
@@ -66,11 +68,21 @@ public abstract class Searcher {
 
 	/**
 	 * When search finds a solution, it modifies the given maze.
-	 * 
-	 * @return the maze with a “.” in each square that is part of the solution
+	 *
+	 * @return the maze with a "." in each square that is part of the solution
 	 *         path
 	 */
 	public Maze getModifiedMaze() {
 		return maze;
+	}
+
+	public boolean update(State s) {
+		cost = s.getDepth();
+		maxDepthSearched = s.getDepth();
+		while (maze.getSquareValue(s.getParent().getX(), s.getParent().getY()) != 'S') {
+			s = s.getParent();
+			maze.setOneSquare(s.getSquare(), '.');
+		}
+		return true;
 	}
 }
