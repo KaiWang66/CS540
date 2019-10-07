@@ -7,13 +7,13 @@ public class GameState {
     private int size;            // The number of stones
     private boolean[] stones;    // Game state: true for available stones, false for taken ones
     private int lastMove;        // The last move
-    private int curPlayer;       // The current player, 0 for Max, 1 for min
-    private int nTaken;
+    private boolean curPlayer;   // The current player, true for 0, false for 1
 
     /**
      * Class constructor specifying the number of stones.
      */
     public GameState(int size, int nTaken) {
+
         this.size = size;
 
         //  For convenience, we use 1-based index, and set 0 to be unavailable
@@ -28,9 +28,8 @@ public class GameState {
         // Set the last move be -1
         this.lastMove = -1;
 
-        // Set the current player
-        curPlayer = (nTaken & 1) == 0 ? 0 : 1;
-        this.nTaken = nTaken;
+        //Initialize curPlayer
+        curPlayer = nTaken % 2 == 0;
     }
 
     /**
@@ -41,7 +40,6 @@ public class GameState {
         this.stones = Arrays.copyOf(other.stones, other.stones.length);
         this.lastMove = other.lastMove;
         this.curPlayer = other.curPlayer;
-        this.nTaken = other.nTaken;
     }
 
 
@@ -52,27 +50,27 @@ public class GameState {
      */
     public List<Integer> getMoves() {
         List<Integer> moves = new ArrayList<>();
-        if (this.lastMove == -1) {
-            for (int i = 1; 2 * i < size; i++) {
-                if ((i % 2) == 1) {
+        if (lastMove == -1) {
+            int maxOdd = size % 2 == 0 ? size / 2 - 1 : size / 2;
+            for (int i = 1; i <= maxOdd; i++) {
+                if (i % 2 == 1) {
                     moves.add(i);
                 }
             }
             return moves;
         }
-
-        for (int i = 2; i * lastMove <= size; i++) {
-            if (stones[i * lastMove]) {
-                moves.add(i * lastMove);
+        int multiple = 1;
+        for (int i = 1; i <= lastMove; i++) {
+            if (stones[i] && lastMove % i == 0) {
+                moves.add(i);
             }
         }
 
-        if (!Helper.isPrime(lastMove)) {
-            for (int i = 1; i < lastMove; i++) {
-                if (stones[i] && lastMove % i == 0) {
-                    moves.add(i);
-                }
+        while (multiple * lastMove <= size) {
+            if (stones[multiple * lastMove]) {
+                moves.add(multiple * lastMove);
             }
+            multiple++;
         }
         return moves;
     }
@@ -88,8 +86,7 @@ public class GameState {
         return this.getMoves().stream().map(move -> {
             var state = new GameState(this);
             state.removeStone(move);
-            state.curPlayer = 1 - state.curPlayer;
-            state.nTaken++;
+            state.curPlayer = !state.curPlayer;
             return state;
         }).collect(Collectors.toList());
     }
@@ -102,36 +99,35 @@ public class GameState {
      * @return int This is the static score of given state
      */
     public double evaluate() {
-        List<GameState> nextMoves = this.getSuccessors();
-        if (nextMoves.size() == 0) {
-            return curPlayer == 0 ? -1 : 1;
-        }
-        if (stones[1]) {
-            return 0;
+        List<Integer> moves = getMoves();
+        if (moves.size() == 0) {
+            return curPlayer ? -1 : 1;
         }
         double score;
 
-        if (lastMove == 1) {
-            score = (nextMoves.size() % 2) == 1 ? 0.5 : -0.5;
+        if (stones[1]) {
+            score = 0;
+        } else if (lastMove == 1) {
+            score = moves.size() % 2 == 1 ? 0.5 : -0.5;
         } else if (Helper.isPrime(lastMove)) {
             int count = 0;
-            for (GameState gs : nextMoves) {
-                if (gs.lastMove % lastMove == 0) {
+            for (int i : moves) {
+                if (i % lastMove == 0) {
                     count++;
                 }
             }
-            score = (count % 2) == 0 ? -0.7 : 0.7;
+            score = count % 2 == 1 ? 0.7 : -0.7;
         } else {
-            int largestPrime = Helper.getLargestPrimeFactor(lastMove);
+            int largePrime = Helper.getLargestPrimeFactor(lastMove);
             int count = 0;
-            for (GameState gs : nextMoves) {
-                if (gs.lastMove % largestPrime == 0) {
+            for (int i : moves) {
+                if (i % largePrime == 0) {
                     count++;
                 }
             }
-            score = (count % 2) == 0 ? -0.6 : 0.6;
+            score = count % 2 == 1 ? 0.6 : -0.6;
         }
-        return curPlayer == 0 ? score : -score;
+        return curPlayer ? score : -score;
     }
 
     /**
@@ -157,10 +153,6 @@ public class GameState {
         return this.stones[idx];
     }
 
-    public int getCurPlayer() {
-        return this.curPlayer;
-    }
-
     /**
      * These are get/set methods for lastMove variable
      *
@@ -183,5 +175,8 @@ public class GameState {
         return this.size;
     }
 
+    public boolean getCurPlayer() {
+        return curPlayer;
+    }
 
 }	

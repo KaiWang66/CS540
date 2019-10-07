@@ -1,3 +1,5 @@
+import java.util.List;
+
 public class TakeStones {
 
 	/**
@@ -11,10 +13,7 @@ public class TakeStones {
 			// Read input from command line
 			int n = Integer.parseInt(args[0]);		// the number of stones
 			int nTaken = Integer.parseInt(args[1]);	// the number of taken stones
-
-//			//initialize helper
-//			Helper h = new Helper(n);
-
+			
 			// Initialize the game state
 			GameState state = new GameState(n, nTaken);		// game state
 			int stone;
@@ -22,6 +21,7 @@ public class TakeStones {
 				stone = Integer.parseInt(args[i + 2]);
 				state.removeStone(stone);
 			}
+
 			int depth = Integer.parseInt(args[nTaken + 2]);	// search depth
 			// Process for depth being -1
 			if (0 == depth)
