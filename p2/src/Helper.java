@@ -30,40 +30,38 @@ public class Helper {
 	* @return boolean True if x is prime; Otherwise, false
 	*/
 	public static boolean isPrime(int x) {
-		for (int i = 2; i < x; i++) {
-			if (x % i == 0) {
-				return false;
-			}
+		if (x <= 1) {
+			return false;
 		}
-		return true;
+		if (x == 2 || x == 3) {
+			return false;
+		}
+		if ((x * x - 1) % 24 == 0) {
+			return true;
+		}
+		return false;
 	}
 
 	/**
-	* This method is used to get the largest prime factor 
-	* @param x A positive integer number
-	* @return int The largest prime factor of x
-	*/
+	 * This method is used to get the largest prime factor
+	 * @param x A positive integer number
+	 * @return int The largest prime factor of x
+	 */
 	public static int getLargestPrimeFactor(int x) {
-//		if (isPrime(x)) {
-//			return x;
-//		}
-//		for (int i = x - 1; i >= 2; i--) {
-//			if (prime[i] && x % i == 0) {
-//				return i;
-//			}
-//		}
-//		return -1;
-
-		if (isPrime(x)) {
-			return x;
+		int maxPrime = -1;
+		while (x % 2 == 0) {
+			maxPrime = 2;
+			x >>= 1;
 		}
-		for (int i = x - 1; i >= 2; i--) {
-			if (x % i == 0 && isPrime(i)) {
-				return i;
+		for (int i = 3; i <= Math.sqrt(x); i+= 2) {
+			while (x % i == 0) {
+				maxPrime = i;
+				x /= i;
 			}
 		}
-		System.out.println("Warning!");
-		return -1;
-
-    }
+		if (x >= 2) {
+			maxPrime = x;
+		}
+		return maxPrime;
+	}
 }
