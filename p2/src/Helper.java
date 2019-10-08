@@ -7,20 +7,16 @@ public class Helper {
 
 	/**
 	* This method is used to check if a number is prime or not
-	* @param x A positive integer number
+	* @param n A positive integer number
 	* @return boolean True if x is prime; Otherwise, false
 	*/
-	public static boolean isPrime(int x) {
-		if (x <= 1) {
-			return false;
-		}
-		if (x == 2 || x == 3) {
-			return true;
-		}
-		if ((x * x - 1) % 24 == 0) {
-			return true;
-		}
-		return false;
+		public static boolean isPrime(int n) {
+		if (n <= 1)  return false;
+
+		for (int i = 2; i < n; i++)
+			if (n % i == 0)
+				return false;
+		return true;
 	}
 
 	/**
