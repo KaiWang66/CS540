@@ -1,3 +1,0 @@
-Documents:
-POSITIVE=819
-NEGATIVE=781
